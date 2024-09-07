@@ -5,14 +5,11 @@ public class CubeExplosion : MonoBehaviour
 {
     [SerializeField]private float _explosionForce = 1000000f;
     [SerializeField]private float _explosionRadius = 10000f;
-    [SerializeField]private ParticleSystem _effect;
 
     public void Explode(Vector3 cubePosition, float forceScaler)
     {
         float newExplosionForce = _explosionForce * forceScaler;
         float newExplosionRadius = _explosionRadius * forceScaler;
-
-        Instantiate(_effect, cubePosition, transform.rotation);
 
         foreach (Rigidbody explotableCubs in GetExplodableCube())
             explotableCubs.AddExplosionForce(newExplosionForce, cubePosition, newExplosionRadius);
@@ -29,13 +26,5 @@ public class CubeExplosion : MonoBehaviour
                 cubs.Add(hit.attachedRigidbody);
         
         return cubs;
-    }
-
-    private void OnValidate()
-    {
-        if (_effect == null)
-        {
-            Debug.Log("effect отсустствует!", this);
-        }
     }
 }

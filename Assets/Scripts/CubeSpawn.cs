@@ -43,9 +43,5 @@ public class CubeSpawn : MonoBehaviour
         {
             Debug.Log("cubeColor отсутствует!", this);
         }
-        //if (cubeExplosion == null)
-        //{
-        //    Debug.Log("cubeExplosion отсутствует!", this);
-        //}
     }
 }
