@@ -2,33 +2,36 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    [SerializeField] private CubeDestroyer cubeDestroyer;
-    [SerializeField] private CubeSpawn cubeSpawn;
+    [SerializeField] private CubeSpawner _cubeSpawn;
+    private CubeManager _cubeManager;
 
     private float _splitChance = 1.0f;
+
+    public void Initialize(CubeManager cubeManager)
+    {
+        _cubeManager = cubeManager;
+    }
+
+    private void Start()
+    {
+        if (_cubeManager == null)
+        {
+            _cubeManager = FindObjectOfType<CubeManager>();
+        }
+    }
 
     private void OnMouseDown()
     {
         if (Random.value < _splitChance)
-            cubeSpawn.SpawnCubes(this, _splitChance);
+            _cubeSpawn.SpawnCubes(this, _splitChance);
+        else
+            _cubeManager.ExploideCube(gameObject);
 
-        cubeDestroyer.DestroyCube();
+        _cubeManager.DestroyCube(gameObject);
     }
 
     public void ChangeSplitChance(float chance)
     {
         _splitChance = chance;
-    }
-
-    private void OnValidate()
-    {
-        if (cubeSpawn == null)
-        {
-            Debug.Log("cubeSpawn отсустствует!", this);
-        }
-        if (cubeDestroyer == null)
-        {
-            Debug.Log("cubeDestroyer отсутствует!", this);
-        }
     }
 }

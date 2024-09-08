@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class CubeSpawn : MonoBehaviour
+public class CubeSpawner : MonoBehaviour
 {
-    [SerializeField] private CubeScaler cubeScaler;
-    [SerializeField] private CubeRandomColorChanger cubeColor;
+    [SerializeField] private CubeScaler _cubeScaler;
+    [SerializeField] private CubeRandomColorChanger _cubeColor;
+    [SerializeField] private CubePusher _cubePusher;
+    [SerializeField] private CubeManager _cubeManager;
 
     public void SpawnCubes(Cube cube, float splitChance)
     {
@@ -15,6 +18,8 @@ public class CubeSpawn : MonoBehaviour
 
         int cubeCount = Random.Range(cubeMinCount, cubeMaxCount + 1);
 
+        List<Cube> cubes = new List<Cube>();
+
         for (int i = 0; i < cubeCount; i++)
         {
             Vector3 randomPosition = cube.transform.position + new Vector3(Random.Range(-radiusNextPosition, radiusNextPosition),
@@ -22,26 +27,17 @@ public class CubeSpawn : MonoBehaviour
 
             Cube newCube = Instantiate(cube, randomPosition, Quaternion.identity);
 
-            cubeScaler.ScaleCube(newCube);
+            _cubeScaler.ScaleCube(newCube);
 
-            cubeColor.ChangeColor(newCube);
+            _cubeColor.ChangeColor(newCube);
 
-            Cube splitController = newCube.GetComponent<Cube>();
+            newCube.ChangeSplitChance(nextSplitChance);
 
-            if (splitController != null)
-                splitController.ChangeSplitChance(nextSplitChance);
+            newCube.Initialize(_cubeManager);
+
+            cubes.Add(newCube);
         }
-    }
 
-    private void OnValidate()
-    {
-        if (cubeScaler == null)
-        {
-            Debug.Log("cubeScaler отсустствует!", this);
-        }
-        if (cubeColor == null)
-        {
-            Debug.Log("cubeColor отсутствует!", this);
-        }
+        _cubePusher.PushCube(cube.transform.position, cubes);
     }
 }
