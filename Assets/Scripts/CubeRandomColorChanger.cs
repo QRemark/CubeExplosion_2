@@ -8,7 +8,6 @@ public class CubeRandomColorChanger : MonoBehaviour
 
         Renderer renderer = cube.GetComponent<Renderer>();
 
-        if (renderer != null )
-            renderer.material.color = randomColor;
+        renderer.material.color = randomColor;
     }
 }

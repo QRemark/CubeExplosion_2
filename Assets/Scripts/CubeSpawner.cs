@@ -5,10 +5,8 @@ public class CubeSpawner : MonoBehaviour
 {
     [SerializeField] private CubeScaler _cubeScaler;
     [SerializeField] private CubeRandomColorChanger _cubeColor;
-    [SerializeField] private CubePusher _cubePusher;
-    [SerializeField] private CubeManager _cubeManager;
 
-    public void SpawnCubes(Cube cube, float splitChance)
+    public void SpawnCube(Cube cube, float splitChance, out List<Rigidbody> clones)
     {
         int cubeMinCount = 2;
         int cubeMaxCount = 6;
@@ -18,26 +16,22 @@ public class CubeSpawner : MonoBehaviour
 
         int cubeCount = Random.Range(cubeMinCount, cubeMaxCount + 1);
 
-        List<Cube> cubes = new List<Cube>();
+        clones = new List<Rigidbody>();
 
         for (int i = 0; i < cubeCount; i++)
         {
             Vector3 randomPosition = cube.transform.position + new Vector3(Random.Range(-radiusNextPosition, radiusNextPosition),
                 Random.Range(-radiusNextPosition, radiusNextPosition), Random.Range(-radiusNextPosition, radiusNextPosition));
 
-            Cube newCube = Instantiate(cube, randomPosition, Quaternion.identity);
+            Cube clone = Instantiate(cube, randomPosition, Quaternion.identity);
 
-            _cubeScaler.ScaleCube(newCube);
+            _cubeScaler.ScaleCube(clone);
 
-            _cubeColor.ChangeColor(newCube);
+            _cubeColor.ChangeColor(clone);
 
-            newCube.ChangeSplitChance(nextSplitChance);
+            clone.ChangeSplitChance(nextSplitChance);
 
-            newCube.Initialize(_cubeManager);
-
-            cubes.Add(newCube);
+            clones.Add(clone.GetComponent<Rigidbody>());
         }
-
-        _cubePusher.PushCube(cube.transform.position, cubes);
     }
 }
