@@ -2,12 +2,20 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    private float _splitChance = 1.0f;
+    [SerializeField] private CubeScaler _cubeScaler;
+    [SerializeField] private CubeRandomColorChanger _cubeColor;
 
-    public float GetSplitChance() => _splitChance;
+    public float SplitChance { get; set; } = 1.0f;
 
-    public void ChangeSplitChance(float chance)
+    public void Init(float nextSplitChance)
     {
-        _splitChance = chance;
+        ChangeSplitChance(nextSplitChance);
+        _cubeScaler.ScaleCube(this);
+        _cubeColor.ChangeColor(this);
+    }
+
+    private void ChangeSplitChance(float chance)
+    {
+        SplitChance = chance;
     }
 }

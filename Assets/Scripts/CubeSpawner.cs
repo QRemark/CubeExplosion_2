@@ -3,20 +3,17 @@ using UnityEngine;
 
 public class CubeSpawner : MonoBehaviour
 {
-    [SerializeField] private CubeScaler _cubeScaler;
-    [SerializeField] private CubeRandomColorChanger _cubeColor;
-
-    public void SpawnCube(Cube cube, float splitChance, out List<Rigidbody> clones)
+    public List<Rigidbody> SpawnCube(Cube cube, float splitChance)
     {
         int cubeMinCount = 2;
         int cubeMaxCount = 6;
 
-        float radiusNextPosition = 5f;
+        float radiusNextPosition = 45f;
         float nextSplitChance = splitChance * 0.5f;
 
         int cubeCount = Random.Range(cubeMinCount, cubeMaxCount + 1);
 
-        clones = new List<Rigidbody>();
+        List<Rigidbody> clones = new List<Rigidbody>();
 
         for (int i = 0; i < cubeCount; i++)
         {
@@ -25,13 +22,12 @@ public class CubeSpawner : MonoBehaviour
 
             Cube clone = Instantiate(cube, randomPosition, Quaternion.identity);
 
-            _cubeScaler.ScaleCube(clone);
+            clone.Init(nextSplitChance);
 
-            _cubeColor.ChangeColor(clone);
-
-            clone.ChangeSplitChance(nextSplitChance);
-
-            clones.Add(clone.GetComponent<Rigidbody>());
+            if (clone.TryGetComponent(out Rigidbody cloneRigidbody))
+                clones.Add(cloneRigidbody);
         }
+
+        return new List<Rigidbody>(clones);
     }
 }

@@ -8,6 +8,4 @@ public class CubeScaler : MonoBehaviour
     {
         cube.transform.localScale *= _scaler;
     }
-
-    public float ForceScalerX(Cube cube) => 1.0f / cube.transform.localScale.x;
 }

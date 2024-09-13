@@ -5,7 +5,6 @@ public class CubeHandler : MonoBehaviour
 {
     [SerializeField] private CubeSpawner _cubeSpawner;
     [SerializeField] private CubeExplosier _cubeExplosier;
-    [SerializeField] private CubeScaler _cubeScaler;
 
     private int _leftMouseButton = 0;
 
@@ -26,30 +25,25 @@ public class CubeHandler : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                Cube cube = hit.collider.GetComponent<Cube>();
+                if (hit.collider.TryGetComponent(out Cube cube))
                 {
-                    if (cube != null)
-                    {
-                        ActionCube(cube);
-                    }
+                    ExecuteCubeAction(cube);
                 }
             }
         }
     }
 
-    private void ActionCube(Cube cube)
+    private void ExecuteCubeAction(Cube cube)
     {
-        List<Rigidbody> cubesInRadius = new List<Rigidbody>();
-
-        if (Random.value <= cube.GetSplitChance())
+        if (Random.value <= cube.SplitChance)
         {
-            _cubeSpawner.SpawnCube(cube, cube.GetSplitChance(), out List<Rigidbody> clones);
-            _cubeExplosier.Explode(cube.transform.position, clones, _cubeScaler.ForceScalerX(cube));
+            List<Rigidbody> clones = _cubeSpawner.SpawnCube(cube, cube.SplitChance);
+            _cubeExplosier.Explode(cube.transform.position, clones, _cubeExplosier.ForceScalerX(cube));
         }
         else
         {
-            cubesInRadius = _cubeExplosier.GetCubesInRadius();
-            _cubeExplosier.Explode(cube.transform.position, cubesInRadius, _cubeScaler.ForceScalerX(cube));
+            List<Rigidbody> cubesInRadius = _cubeExplosier.GetCubesInRadius();
+            _cubeExplosier.Explode(cube.transform.position, cubesInRadius, _cubeExplosier.ForceScalerX(cube));
         }
 
         Destroy(cube.gameObject);

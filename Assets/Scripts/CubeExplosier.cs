@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class CubeExplosier : MonoBehaviour
 {
-    [SerializeField] private float _explosionForce = 1000000f;
-    [SerializeField] private float _explosionRadius = 10000f;
+    [SerializeField] private float _explosionForce = 100000f;
+    [SerializeField] private float _explosionRadius = 100000f;
 
-    public void Explode(Vector3 cubePosition, List<Rigidbody> cubes, float cubeScalerForce)///принимать только лист , позиция
+    public void Explode(Vector3 cubePosition, List<Rigidbody> cubes, float cubeScalerForce)
     {
         float newExplosionForce = _explosionForce * cubeScalerForce;
         float newExplosionRadius = _explosionRadius * cubeScalerForce;
@@ -19,6 +19,8 @@ public class CubeExplosier : MonoBehaviour
     {
         return new List<Rigidbody>(GetExplodableCube());
     }
+
+    public float ForceScalerX(Cube cube) => 1.0f / cube.transform.localScale.x;
 
     private List<Rigidbody> GetExplodableCube()
     {

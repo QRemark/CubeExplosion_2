@@ -1,5 +1,7 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Renderer))]
+
 public class CubeRandomColorChanger : MonoBehaviour
 {
     public void ChangeColor(Cube cube)
